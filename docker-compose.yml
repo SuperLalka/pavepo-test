@@ -1,0 +1,32 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./compose/fastapi/Dockerfile
+    container_name: pp_fastapi
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+     - .:/src
+    env_file:
+      - ./.envs_example/.fastapi
+    ports:
+      - "8000:80"
+    entrypoint: /start-reload.sh
+
+  postgres:
+    image: postgres:16
+    container_name: pp_postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs_example/.postgres
+    ports:
+      - "5432:5432"
