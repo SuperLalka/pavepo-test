@@ -5,13 +5,19 @@ ENV PYTHONPATH "${PYTHONPATH}:/"
 RUN apt-get update -y \
   && apt-get install gcc -y
 
-WORKDIR /src
+WORKDIR /app
 
 RUN pip install poetry
 
-COPY poetry.lock pyproject.toml /src/
+COPY poetry.lock pyproject.toml /app/
 
 RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi --no-root
+  && poetry install --no-interaction --no-ansi
 
-COPY ./src /src
+COPY ./src /app/src
+COPY ./src/main.py /app/main.py
+
+COPY ./alembic /app/alembic
+COPY ./alembic.ini /app/
+
+WORKDIR /app/src

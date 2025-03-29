@@ -1,2 +1,2 @@
-from file import *
-from user import *
+from .attachment import *
+from .user import *

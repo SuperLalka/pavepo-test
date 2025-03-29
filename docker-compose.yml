@@ -16,9 +16,10 @@ services:
      - .:/src
     env_file:
       - ./.envs_example/.fastapi
+      - ./.envs_example/.postgres
     ports:
-      - "8000:80"
-    entrypoint: /start-reload.sh
+      - "80:80"
+    command: uvicorn main:app --host 0.0.0.0 --port 80
 
   postgres:
     image: postgres:16
