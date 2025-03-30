@@ -20,4 +20,6 @@ COPY ./src/main.py /app/main.py
 COPY ./alembic /app/alembic
 COPY ./alembic.ini /app/
 
+COPY ./compose/fastapi/prestart.sh .
+
 WORKDIR /app/src

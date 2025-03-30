@@ -37,7 +37,7 @@ container = LocalStorageDriver("./upload_dir").get_container("attachment")
 StorageManager.add_storage("default", container)
 
 # Configure Static
-app.mount("/static", StaticFiles(directory="static"))
+app.mount("/static", StaticFiles(directory="src/static"))
 
 
 @app.on_event("startup")

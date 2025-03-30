@@ -10,13 +10,12 @@ from fastapi_oauth2.security import OAuth2
 from src.config.database import get_db
 from src.repository.attachment_repository import AttachmentRepository
 from src.repository.user_repository import UserRepository
-from src.schemas.attachment_schemas import AttachmentInDBBase
 
 oauth2 = OAuth2()
 router = APIRouter(
     prefix="/ssr"
 )
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/templates")
 
 
 @router.get("", response_class=HTMLResponse)

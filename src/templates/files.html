@@ -3,6 +3,7 @@
 {% block content %}
 <p>This is the current list of your files.</p>
 <div style="max-width: 90%; padding: 8px 16px; background: #161618; text-align: center;">
+	{% if files %}
 	<table>
 		<thead style="height: 50px;">
 		<tr>
@@ -27,5 +28,8 @@
 		{% endfor %}
 		</tbody>
 	</table>
+	{% else %}
+	<p>No files have been uploaded yet</p>
+	{% endif %}
 </div>
 {% endblock %}
