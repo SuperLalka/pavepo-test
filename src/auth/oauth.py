@@ -9,7 +9,7 @@ yandex_client = OAuth2Client(
     backend=YaruOAuth2,
     client_id=settings.OAUTH2_YANDEX_CLIENT_ID,
     client_secret=settings.OAUTH2_YANDEX_CLIENT_SECRET,
-    redirect_uri="http://localhost:80/",
+    # redirect_uri="http://0.0.0.0:80/",
     scope=["login:email", "login:info"],
 )
 

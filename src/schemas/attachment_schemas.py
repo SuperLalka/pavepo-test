@@ -1,18 +1,25 @@
 from datetime import datetime
+from typing import Optional
 
-from pydantic import BaseModel, UUID4
-from sqlalchemy_file import File
+from pydantic import BaseModel, UUID4, FilePath
 
 
-class AttachmentInput(BaseModel):
+class AttachmentBase(BaseModel):
     name: str
-    content: File
-    user_id: UUID4
+
+
+class AttachmentInput(AttachmentBase):
+    content: Optional[FilePath] = None
+    user_id: str
 
 
 class AttachmentOutput(BaseModel):
     id: UUID4
     name: str
-    user_id: UUID4
+    user_id: str
     created_at: datetime
     updated_at: datetime
+
+
+class AttachmentInDBBase(AttachmentOutput):
+    content: dict

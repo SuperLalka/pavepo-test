@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: Optional[str] = os.getenv("POSTGRES_USER")
     POSTGRES_PASSWORD: Optional[str] = os.getenv("POSTGRES_PASSWORD")
     POSTGRES_CONNECTION_STRING: str = (
-        f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+        f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
     )
     # OAuth2
     OAUTH2_YANDEX_CLIENT_ID: Optional[str] = os.getenv("OAUTH2_YANDEX_CLIENT_ID")

@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 
 from .settings import settings
 
+# TODO: Use AsyncSession
 engine = create_engine(
     settings.POSTGRES_CONNECTION_STRING,
-    connect_args={"check_same_thread": False},
 )
 SessionLocal = sessionmaker(
     autocommit=False,

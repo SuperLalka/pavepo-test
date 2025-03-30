@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>This is the current list of your files.</p>
+<div style="max-width: 90%; padding: 8px 16px; background: #161618; text-align: center;">
+	<table>
+		<thead style="height: 50px;">
+		<tr>
+			<th>#</th>
+			<th>name</th>
+			<th>storage_path</th>
+			<th>url</th>
+			<th>content_type</th>
+			<th>size</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for file in files %}
+		<tr>
+			<td>{{ file.id }}</td>
+			<td>{{ file.name }}</td>
+			<td>{{ file.content.path }}</td>
+			<td>{{ file.content.url }}</td>
+			<td>{{ file.content.content_type }}</td>
+			<td>{{ file.content.size }}</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

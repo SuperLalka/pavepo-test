@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport"
+		      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Pavepo-test</title>
+	</head>
+	<body
+			style="margin: 0; display: flex; flex-direction: column; background: #1e1e20; color: #dfdfd6; font-family: sans-serif;">
+		<header style="display: flex; background: #161618; height: 70px; width: 100%;">
+			<div style="display: flex; align-items: center; width: 100%; justify-content: space-around;">
+				<div style="display: flex; width: 30vw; justify-content: space-evenly;">
+					<a href="/" style="color: #dfdfd6">Home</a>
+					{% if request.user.is_authenticated %}
+					<a href="/ssr/users" style="color: #dfdfd6">Users</a>
+					<a href="/ssr/attachments" style="color: #dfdfd6">My Files</a>
+					{% endif %}
+					<a href="/documentation/docs" style="color: #dfdfd6">Documentation</a>
+				</div>
+				<div style="display: flex; align-items: center;">
+					{% if request.user.is_authenticated %}
+					<a href="/oauth2/logout" style="text-decoration: none; color: #dfdfd6; margin-right: 20px;">Sign out</a>
+					{% if request.user.picture %}
+					<img style="height: 50px; width: 50px;" src="{{ request.user.picture }}" alt="Pic">
+					{% else %}
+					<img style="height: 50px; width: 50px;" src="/static/images/symbol_ok.svg" alt="Pic">
+					{% endif %}
+					{% else %}
+					{% for provider in request.auth.clients %}
+					<a href="/oauth2/{{ provider }}/authorize" style="display: flex; align-items: center;">
+						<img
+								alt="{{ provider }} icon"
+								src="/static/logos/{{ provider }}.svg"
+								style="width: 50px; height: 50px; background-color: white;"
+						>
+					</a>
+					{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</header>
+		<section
+				style="display: flex; flex-direction: column; align-items: center; min-height: calc(100vh - 170px); padding: 50px 0;">
+			{% if request.user.is_authenticated %}
+			<h2 style="margin-bottom: 0;">{{ request.user.real_name }}</h2>
+			<h3 style="margin-bottom: 0;">
+				You're signed in using
+				{% if request.auth.provider %}
+				external '{{ request.auth.provider.provider }}' OAuth2 provider.
+				{% else %}
+				local authentication system.
+				{% endif %}
+			</h3>
+			{% block content %}{% endblock %}
+			{% else %}
+			<h1>You are not authenticated</h1>
+			<p>You should sign in using one of the OAuth options</p>
+			{% endif %}
+		</section>
+	</body>
+</html>

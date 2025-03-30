@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>This is what the JWT contains currently. See all <a style="color: #009486;" href="/ssr/users">users</a> from
+	database.</p>
+<div style="padding: 8px 16px; background: #161618; border-radius: 6px;">
+	<p style="text-align: center">Use this token for requests</p>
+	<pre style="max-width: 850px; white-space: pre-wrap; word-break: break-all;">{{ json.dumps(request.cookies.Authorization, indent=4) }}</pre>
+</div>
+<div style="padding: 8px 16px; background: #161618; border-radius: 6px; margin: 20px 0;">
+	<p style="text-align: center">Information extracted from your token</p>
+	<pre style="max-width: 500px; white-space: pre-wrap;">{{ json.dumps(request.user, indent=4) }}</pre>
+</div>
+{% endblock %}

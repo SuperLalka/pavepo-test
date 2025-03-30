@@ -1,31 +1,41 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
 class UserBase(BaseModel):
+    id: str
     email: str
-    username: str
     is_superuser: bool = False
     is_active: bool = True
 
 
 class UserIn(UserBase):
-    password: str
+    real_name: Optional[str]
+    username: Optional[str]
+
+
+class UserOauthIn(UserBase):
+    email: str = Field(validation_alias="default_email", serialization_alias="default_email")
+    real_name: Optional[str] = None
+    username: Optional[str] = Field(validation_alias="login", serialization_alias="login")
+
+
+class UserOut(UserBase):
+    real_name: Optional[str]
+    username: Optional[str]
 
 
 class UserInDBBase(UserBase):
-    id: UUID4
+    real_name: Optional[str]
+    username: Optional[str]
 
     class Config:
         orm_mode = True
 
 
-class UserInDB(UserInDBBase):
-    hashed_password: str
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
+class UserUpdate(BaseModel):
+    is_superuser: Optional[bool] = None
+    is_active: Optional[bool] = None
 
 
 class Token(BaseModel):

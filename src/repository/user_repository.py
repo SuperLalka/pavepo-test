@@ -1,10 +1,9 @@
-from typing import Type
+from typing import Type, List, Optional
 
-from pydantic import UUID4
 from sqlalchemy.orm import Session
 
 from src.models.user import User
-from src.schemas.user_schemas import UserIn, UserInDBBase
+from src.schemas.user_schemas import UserIn, UserInDBBase, UserUpdate
 
 
 class UserRepository:
@@ -12,32 +11,45 @@ class UserRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, data: UserIn, hashed_password: str) -> UserInDBBase:
-        db_user = User(**data.model_dump(exclude={"password"}), hashed_password=hashed_password)
+    async def create(self, data: UserIn) -> UserInDBBase:
+        db_user = User(**data.model_dump())
         self.session.add(db_user)
         self.session.commit()
-        # self.session.refresh(db_user)
+        self.session.refresh(db_user)
         return UserInDBBase(**db_user.__dict__)
 
-    def exists_by_id(self, _id: UUID4) -> bool:
+    async def exists_by_id(self, _id: str) -> bool:
         return self.session.query(User).filter(User.id == _id).first() is not None
 
-    def exists_by_email(self, email: str) -> bool:
+    async def exists_by_email(self, email: str) -> bool:
         return self.session.query(User).filter(User.email == email).first() is not None
 
-    def exists_by_username(self, username: str) -> bool:
-        return self.session.query(User).filter(User.username == username).first() is not None
+    async def get_all(self) -> List[Optional[UserInDBBase]]:
+        users = self.session.query(User).all()
+        return self._map_city_to_schema_list(users)
 
-    def get_by_id(self, _id: UUID4) -> Type[User]:
+    @staticmethod
+    def _map_city_to_schema_list(users: List[Type[User]]) -> List[UserInDBBase]:
+        return [
+            UserInDBBase(**user.__dict__)
+            for user in users
+        ]
+
+    async def get_by_id(self, _id: str) -> Optional[User]:
         return self.session.query(User).filter(User.id == _id).first()
 
-    def get_by_email(self, email: str):
+    async def get_by_email(self, email: str) -> Optional[User]:
         return self.session.query(User).filter(User.email == email).first()
 
-    def get_by_username(self, username: str):
-        return self.session.query(User).filter(User.username == username).first()
+    async def update_user(self, user: Type[User], data: UserUpdate) -> UserInDBBase:
+        for key, value in data.model_dump(exclude_none=True).items():
+            setattr(user, key, value)
 
-    def delete_user(self, user: Type[User]) -> bool:
+        self.session.commit()
+        self.session.refresh(user)
+        return UserInDBBase(**user.__dict__)
+
+    async def delete_user(self, user: Type[User]) -> bool:
         self.session.delete(user)
         self.session.commit()
         return True

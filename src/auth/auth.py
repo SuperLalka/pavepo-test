@@ -1,14 +1,11 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from auth import security
-from config.database import get_db
-from models.user import User
-from schemas.user import TokenData
-
-from src.router.exceptions import unauthorized
+from src.config.database import get_db
+from src.config.settings import settings
+from src.models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -21,20 +18,20 @@ async def get_current_user(
         token: str = Depends(oauth2_scheme),
         db: Session = Depends(get_db)
 ):
-    try:
-        payload = jwt.decode(
-            token, security.SECRET_KEY, algorithms=[security.ALGORITHM]
-        )
-        username: str = payload.get("sub")
-        assert username is not None
+    # try:
+    payload = jwt.decode(
+        token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
+    )
 
-        token_data = TokenData(username=username)
-        user = db.query(User).filter(User.username == token_data.username).first()
-        assert user is not None
+    _id: str = payload.get("id")
+    assert _id is not None
 
-    except JWTError:
-        return unauthorized("Could not validate JWT")
-    except AssertionError:
-        return unauthorized("Could not validate credentials")
+    user = db.query(User).filter(User.id == _id).first()
+    assert user is not None
+
+    # except JWTError:
+    #     raise HTTPException(status_code=401, detail="Could not validate JWT")
+    # except AssertionError:
+    #     raise HTTPException(status_code=401, detail="Could not validate credentials")
 
     return user

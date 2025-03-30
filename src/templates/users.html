@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>This is the current list of all users. See <a style="color: #009486;" href="/ssr/">JWT</a> content.</p>
+<div style="padding: 8px 16px; background: #161618; border-radius: 6px;">
+  <pre style="max-width: 700px; white-space: normal;">
+      {% for user in users %}
+          {{ user }}
+      {% endfor %}
+  </pre>
+</div>
+{% endblock %}
